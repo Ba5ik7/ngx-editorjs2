@@ -239,6 +239,8 @@ Ngx-EditorJs2 follows a structured approach where each block component:
 - **Uses `host` CSS classes** to apply styling and animations.
 - **Uses a `formGroup`**, which integrates with the larger form structure that holds all blocks.
 
+For a complete walkthrough see [docs/custom-blocks-tutorial.md](docs/custom-blocks-tutorial.md).
+
 ### **How Blocks Work in Ngx-EditorJs2**
 Each block in Ngx-EditorJs2 is part of a larger **`formGroup`**, allowing seamless state management across the entire editor. This design ensures that:
 - Each block maintains its own **FormControl**, enabling real-time data binding.
