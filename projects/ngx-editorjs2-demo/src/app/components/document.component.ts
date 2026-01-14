@@ -14,6 +14,7 @@ import { AsyncPipe } from '@angular/common';
           [blocks]="(appService.ngxEditorJsBlocks$ | async)!"
           [requestBlocks]="appService.requestBlocks$ | async"
           (blocksRequested)="appService.handleBlocks($event)"
+          (formChanged)="formChanged($event)"
         ></ngx-editor-js2>
       </mat-card-content>
     </mat-card>
@@ -35,4 +36,8 @@ import { AsyncPipe } from '@angular/common';
 })
 export class DocumentComponent {
   appService = inject(AppService);
+
+  formChanged(blocks: any) {
+    console.log('DocumentComponent - formChanged', blocks);
+  }
 }
