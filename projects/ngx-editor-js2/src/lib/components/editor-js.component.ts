@@ -10,7 +10,7 @@ import { EditorJsService } from '../services/editor-js.service';
 import { NgxEditorJs2Service } from '../services/ngx-editor-js2.service';
 import { NgxEditorJsBlock } from '../ngx-editor-js2.interface';
 import { CdkDropList, CdkDragDrop } from '@angular/cdk/drag-drop';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, tap } from 'rxjs';
 
 @Component({
   selector: 'editor-js',
@@ -66,6 +66,8 @@ export class EditorJsComponent {
         event.currentIndex
       )
     ).then(() => {
+      this.editorJsService.formGroup.updateValueAndValidity();
+
       // DRAG ANIMATION HOT FIX
       // Wait for Angular to update the DOM, then remove the animation class
       requestAnimationFrame(() => {

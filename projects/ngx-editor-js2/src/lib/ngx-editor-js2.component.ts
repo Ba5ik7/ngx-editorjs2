@@ -37,7 +37,7 @@ export class NgxEditorJs2Component {
       takeUntilDestroyed(),
       debounceTime(500),
       switchMap(() => this.editorJsService.getBlocks$()),
-      tap((blocks) => this.formChanged.emit(blocks))
+      tap((blocks) => this.formChanged.emit(blocks)),
     ).subscribe();
   }
 
