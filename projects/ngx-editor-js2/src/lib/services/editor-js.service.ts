@@ -110,6 +110,10 @@ export class EditorJsService {
         const componentRef = this.ngxEditor.createComponent(component, {
           index,
         });
+
+      (componentRef.location.nativeElement as HTMLElement)
+        .classList.add('ngx-editor-js2-block');
+
         componentRef.setInput('sortIndex', index);
         componentRef.setInput('formGroup', this.formGroup);
         componentRef.setInput('formControlName', controlName);
