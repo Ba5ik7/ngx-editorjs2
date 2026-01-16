@@ -103,7 +103,7 @@ export const TEST_DATA_TWO: NgxEditorJsBlock[] = [
   providedIn: 'root',
 })
 export class AppService {
-  ngxEditorJsBlocks = new BehaviorSubject<NgxEditorJsBlock[]>([]);
+  ngxEditorJsBlocks = new BehaviorSubject<NgxEditorJsBlock[]>(TEST_DATA_TWO);
   ngxEditorJsBlocks$ = this.ngxEditorJsBlocks.asObservable();
 
   requestBlocks = new BehaviorSubject<{}>({});

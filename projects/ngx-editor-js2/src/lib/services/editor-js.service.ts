@@ -80,10 +80,11 @@ export class EditorJsService {
   }
 
   addBlockComponent(
-    ngxEditorJsBlock: NgxEditorJsBlockWithComponent
+    ngxEditorJsBlock: NgxEditorJsBlockWithComponent,
+    emitEvent = true
   ): Observable<void> {
     return forkJoin([
-      this.createFormGroupControl(ngxEditorJsBlock),
+      this.createFormGroupControl(ngxEditorJsBlock, emitEvent),
       this.attachComponent(ngxEditorJsBlock),
       this.blockMovementService.updateComponentIndices(this.ngxEditor),
     ]).pipe(map(() => void 0));
@@ -92,9 +93,9 @@ export class EditorJsService {
   createFormGroupControl({
     blockId,
     dataClean,
-  }: NgxEditorJsBlockWithComponent) {
+  }: NgxEditorJsBlockWithComponent, emitEvent = true) {
     return of(this.formBuilder.control(dataClean, [])).pipe(
-      tap((formControl) => this.formGroup.addControl(blockId, formControl, { emitEvent: false }))
+      tap((formControl) => this.formGroup.addControl(blockId, formControl, { emitEvent }))
     );
   }
 

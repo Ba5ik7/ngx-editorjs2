@@ -135,7 +135,7 @@ export class NgxEditorJs2Service {
   addBlocksToEditorJs(blocks: NgxEditorJsBlockWithComponent[]) {
     return combineLatest(
       blocks.map((block: NgxEditorJsBlockWithComponent) =>
-        this.editorJsService.addBlockComponent(block)
+        this.editorJsService.addBlockComponent(block, false)
       )
     );
   }
