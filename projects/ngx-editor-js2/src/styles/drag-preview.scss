@@ -1,4 +1,4 @@
-.cdk-drag-preview {
+.ngx-editor-js2-block.cdk-drag-preview {
   overflow: visible;
   color: var(--mat-sys-on-secondary-container);
   background-color: var(--mat-sys-secondary-container);
@@ -11,13 +11,18 @@
   }
 }
 
-.cdk-drag-placeholder {
+.ngx-editor-js2-block.cdk-drag-placeholder {
   opacity: 0;
 }
 
-.cdk-drag-animating {
+// .ngx-editor-js2-block.cdk-drag-animating {
+//   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+// }
+
+.block-list.cdk-drop-list-dragging .ngx-editor-js2-block:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
 
 paragraph-block.cdk-drag-preview {
   p {

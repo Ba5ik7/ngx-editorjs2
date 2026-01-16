@@ -11,7 +11,6 @@ import { AsyncPipe } from '@angular/common';
     <mat-card appearance="outlined">
       <mat-card-content>
         <ngx-editor-js2
-          class="ngx-editor-js2-tokens"
           [blocks]="(appService.ngxEditorJsBlocks$ | async)!"
           [requestBlocks]="appService.requestBlocks$ | async"
           (blocksRequested)="appService.handleBlocks($event)"

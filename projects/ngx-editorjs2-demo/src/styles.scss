@@ -2,6 +2,11 @@
 @use "@angular/material" as mat;
 @use 'styles/drag-preview.scss';
 
+// Debug border around everything
+// * {
+//   box-shadow: 0px 0px 2px rgba(255, 0, 0, 1);
+// }
+
 html,
 body {
   height: 100%;
@@ -119,8 +124,9 @@ body {
 .flex-spacer {
   flex-grow: 1;
 }
+
 .ngx-editor-js2-block.cdk-drag-preview,
-.ngx-editor-js2-tokens {
+.ngx-editor-js2-block {
   --mat-sys-body-large: 400 1.25rem / 1.75rem Roboto;
   --mat-sys-body-large-font: Roboto;
   --mat-sys-body-large-line-height: 1.75rem;
