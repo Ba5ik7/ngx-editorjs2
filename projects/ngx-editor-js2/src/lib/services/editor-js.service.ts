@@ -94,7 +94,7 @@ export class EditorJsService {
     dataClean,
   }: NgxEditorJsBlockWithComponent) {
     return of(this.formBuilder.control(dataClean, [])).pipe(
-      tap((formControl) => this.formGroup.addControl(blockId, formControl))
+      tap((formControl) => this.formGroup.addControl(blockId, formControl, { emitEvent: false }))
     );
   }
 
