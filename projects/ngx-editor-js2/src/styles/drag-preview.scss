@@ -14,10 +14,11 @@
   opacity: 0;
 }
 
-// .ngx-editor-js2-block.cdk-drag-animating {
-//   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-// }
+.ngx-editor-js2-block.cdk-drag-animating {
+  transition: none;
+}
 
+.ngx-editor-js2-block.cdk-drag-preview,
 .block-list.cdk-drop-list-dragging .ngx-editor-js2-block:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
