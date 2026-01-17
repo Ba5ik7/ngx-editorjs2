@@ -1,6 +1,6 @@
 {
   "name": "@tmdjr/ngx-editor-js2",
-  "version": "20.3.3",
+  "version": "20.3.4",
   "schematics": "./schematics/collection.json",
   "peerDependencies": {
     "@angular/animations": "^20.0.4",

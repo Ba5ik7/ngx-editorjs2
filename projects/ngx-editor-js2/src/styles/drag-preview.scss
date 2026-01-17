@@ -4,10 +4,6 @@
   background-color: var(--mat-sys-secondary-container);
   border-radius: var(--mat-card-outlined-container-shape, var(--mat-sys-corner-medium));
   box-shadow: var(--mat-sys-level4);
-
-  & *:not(toolbar) {
-    margin: 0 !important;
-  }
 }
 
 .ngx-editor-js2-block.cdk-drag-placeholder {
@@ -26,6 +22,10 @@
 
 paragraph-block.cdk-drag-preview {
   p {
+    & *:not(toolbar, ul) {
+      margin: 0 !important;
+    }
+
     ul {
       margin: 0 0 14px 0 !important;
       padding-left: 40px !important;
