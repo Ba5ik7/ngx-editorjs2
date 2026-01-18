@@ -81,7 +81,7 @@
           "builder": "@angular-builders/jest:run",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "tsconfig.spec.json",
+            "tsConfig": "projects/ngx-editorjs2-demo/tsconfig.spec.json",
             "inlineStyleLanguage": ["scss"],
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
@@ -116,7 +116,7 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "tsConfig": "tsconfig.spec.json",
+            "tsConfig": "projects/ngx-editor-js2/tsconfig.spec.json",
             "polyfills": ["zone.js", "zone.js/testing"]
           }
         }
