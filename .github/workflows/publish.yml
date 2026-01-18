@@ -1,0 +1,56 @@
+name: Publish ngx-editor-js2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          always-auth: true
+
+      - name: Use npm 11.6.0
+        run: npm install -g npm@11.6.0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Stamp library version with build number
+        env:
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const path = 'projects/ngx-editor-js2/package.json';
+          const pkg = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const version = String(pkg.version ?? '0.0.0').split('.');
+          const [major = '0', minor = '0'] = version;
+          const patch = process.env.GITHUB_RUN_NUMBER ?? '0';
+          pkg.version = `${major}.${minor}.${patch}`;
+          fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + '\n');
+          console.log(`Publishing ngx-editor-js2 version ${pkg.version}`);
+          NODE
+
+      - name: Build Angular library
+        run: npm run build-ngx-editor-js2
+
+      - name: Publish package to npm
+        working-directory: dist/ngx-editor-js2
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

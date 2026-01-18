@@ -1,15 +1,15 @@
 {
   "name": "@tmdjr/ngx-editor-js2",
-  "version": "20.3.5",
+  "version": "21.0.1",
   "schematics": "./schematics/collection.json",
   "peerDependencies": {
-    "@angular/animations": "^20.0.4",
-    "@angular/cdk": "^20.0.3",
-    "@angular/common": "^20.0.4",
-    "@angular/compiler": "^20.0.4",
-    "@angular/core": "^20.0.4",
-    "@angular/forms": "^20.0.4",
-    "@angular/material": "^20.0.3"
+    "@angular/animations": "^21.1.0",
+    "@angular/cdk": "^21.1.0",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/material": "^21.1.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"
