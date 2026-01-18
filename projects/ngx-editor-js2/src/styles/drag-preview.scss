@@ -2,7 +2,10 @@
   overflow: visible;
   color: var(--mat-sys-on-secondary-container);
   background-color: var(--mat-sys-secondary-container);
-  border-radius: var(--mat-card-outlined-container-shape, var(--mat-sys-corner-medium));
+  border-radius: var(
+    --mat-card-outlined-container-shape,
+    var(--mat-sys-corner-medium)
+  );
   box-shadow: var(--mat-sys-level4);
 }
 
@@ -15,20 +18,20 @@
 }
 
 .ngx-editor-js2-block.cdk-drag-preview,
-.block-list.cdk-drop-list-dragging .ngx-editor-js2-block:not(.cdk-drag-placeholder) {
+.block-list.cdk-drop-list-dragging
+  .ngx-editor-js2-block:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-
 paragraph-block.cdk-drag-preview {
+  & *:not(toolbar, ul) {
+    margin: 0 !important;
+  }
   p {
-    & *:not(toolbar, ul) {
-      margin: 0 !important;
-    }
-
     ul {
       margin: 0 0 14px 0 !important;
       padding-left: 40px !important;
+
       &:not(:first-child) {
         margin: 14px 0 14px 0 !important;
       }
