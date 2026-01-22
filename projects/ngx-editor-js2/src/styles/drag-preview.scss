@@ -29,12 +29,9 @@ paragraph-block.cdk-drag-preview {
   }
   p {
     ul {
-      margin: 0 0 14px 0 !important;
-      padding-left: 40px !important;
 
-      &:not(:first-child) {
-        margin: 14px 0 14px 0 !important;
-      }
+      padding-left: 40px !important;
+      margin: 1em 0 !important;
     }
   }
 }
