@@ -168,7 +168,7 @@ export class EditorJsService {
         index,
         clear
       ),
-      of(this.formGroup.removeControl(formControlName)),
+      of(this.formGroup.removeControl(formControlName, { emitEvent: !clear })),
     ]);
   }
 
