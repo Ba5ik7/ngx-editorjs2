@@ -30,7 +30,7 @@ export interface BlockComponent {
   formGroup: InputSignal<FormGroup>;
   blockOptionActions: InputSignal<BlockOptionAction[]>;
   savedAction: Signal<string>;
-  actionCallback?: (string: string) => void;
+  actionCallback?: (action: string, updateFormValue: boolean) => void;
 }
 
 export interface BlockOptionAction {

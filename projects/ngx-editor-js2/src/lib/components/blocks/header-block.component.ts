@@ -125,7 +125,8 @@ export class HeaderBlockComponent implements BlockComponent {
   savedAction = signal<string>('h1');
   actionCallbackBind = this.actionCallback.bind(this);
 
-  actionCallback(selectedAction: string) {
+  actionCallback(selectedAction: string,  updateFormValue = true) {
     this.savedAction.set(selectedAction);
+    updateFormValue && this.formGroup().updateValueAndValidity();
   }
 }

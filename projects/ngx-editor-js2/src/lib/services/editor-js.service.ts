@@ -120,7 +120,7 @@ export class EditorJsService {
         componentRef.setInput('formControlName', controlName);
         componentRef.setInput('autofocus', autofocus);
 
-        savedAction && componentRef.instance.actionCallback?.(savedAction);
+        savedAction && componentRef.instance.actionCallback?.(savedAction, false);
 
         this.blockMovementService.newComponentAttached(componentRef);
         return componentRef;

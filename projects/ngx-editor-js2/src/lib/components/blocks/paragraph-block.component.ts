@@ -86,7 +86,8 @@ export class ParagraphBlockComponent implements BlockComponent {
   savedAction = signal<string>('medium');
   actionCallbackBind = this.actionCallback.bind(this);
 
-  actionCallback(action: string) {
+  actionCallback(action: string, updateFormValue = true) {
     this.savedAction.update(() => action);
+    updateFormValue && this.formGroup().updateValueAndValidity();
   }
 }
