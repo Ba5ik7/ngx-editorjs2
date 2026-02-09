@@ -5,6 +5,7 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
+import { afterEach } from 'vitest';
 
 // Type alias for mocked objects - compatible with Vitest
 type MockedObject<T> = {
@@ -32,3 +33,8 @@ if (!testEnvironmentInitialized) {
   );
   testEnvironmentInitialized = true;
 }
+
+// Reset test module after each test
+afterEach(() => {
+  getTestBed().resetTestingModule();
+});

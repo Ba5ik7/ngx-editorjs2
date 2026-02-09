@@ -18,6 +18,8 @@ export default defineConfig({
       reporter: ['text', 'html'],
       reportsDirectory: 'coverage/ngx-editor-js2',
     },
+    pool: 'forks',
+    isolate: false,
   },
   define: {
     'import.meta.vitest': undefined,
