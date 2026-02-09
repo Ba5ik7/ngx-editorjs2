@@ -14,27 +14,27 @@ import { HeaderBlockComponent } from '../components/blocks/header-block.componen
 
 describe('EditorJsService', () => {
   let service: EditorJsService;
-  let blockMovementServiceMock: jest.Mocked<BlockMovementService>;
-  let ngxEditorMock: jest.Mocked<ViewContainerRef>;
+  let blockMovementServiceMock: MockedObject<BlockMovementService>;
+  let ngxEditorMock: MockedObject<ViewContainerRef>;
   let fixture: ComponentFixture<HeaderBlockComponent>;
   let mockComponentRef: ComponentRef<HeaderBlockComponent>;
 
   beforeEach(() => {
     blockMovementServiceMock = {
-      getNgxEditorJsBlocks: jest.fn().mockReturnValue(of([])),
-      removeBlockComponent: jest.fn().mockReturnValue(of(null)),
-      moveBlockComponentPosition: jest.fn().mockReturnValue(of(null)),
-      updateComponentIndices: jest.fn().mockReturnValue(of(null)),
-      newComponentAttached: jest.fn(),
-      clearComponentRefs: jest.fn(),
-    } as unknown as jest.Mocked<BlockMovementService>;
+      getNgxEditorJsBlocks: vi.fn().mockReturnValue(of([])),
+      removeBlockComponent: vi.fn().mockReturnValue(of(null)),
+      moveBlockComponentPosition: vi.fn().mockReturnValue(of(null)),
+      updateComponentIndices: vi.fn().mockReturnValue(of(null)),
+      newComponentAttached: vi.fn(),
+      clearComponentRefs: vi.fn(),
+    } as unknown as MockedObject<BlockMovementService>;
 
     ngxEditorMock = {
-      createComponent: jest.fn(),
-      move: jest.fn(),
-      get: jest.fn(),
-      clear: jest.fn(),
-    } as unknown as jest.Mocked<ViewContainerRef>;
+      createComponent: vi.fn(),
+      move: vi.fn(),
+      get: vi.fn(),
+      clear: vi.fn(),
+    } as unknown as MockedObject<ViewContainerRef>;
 
     TestBed.configureTestingModule({
       providers: [
@@ -76,22 +76,22 @@ describe('EditorJsService', () => {
       // Arrange: Mock component references in unsorted order
       const mockComponentRef1 = {
         instance: {
-          formControlName: jest.fn().mockReturnValue('block1'),
-          sortIndex: jest.fn().mockReturnValue(2), // Higher index (should be sorted last)
+          formControlName: vi.fn().mockReturnValue('block1'),
+          sortIndex: vi.fn().mockReturnValue(2), // Higher index (should be sorted last)
           constructor: { name: 'BMockBlockComponent' },
-          formGroup: jest.fn().mockReturnValue({
-            get: jest.fn().mockReturnValue({ value: 'data1' }),
+          formGroup: vi.fn().mockReturnValue({
+            get: vi.fn().mockReturnValue({ value: 'data1' }),
           }),
         },
       } as unknown as ComponentRef<BlockComponent>;
 
       const mockComponentRef2 = {
         instance: {
-          formControlName: jest.fn().mockReturnValue('block2'),
-          sortIndex: jest.fn().mockReturnValue(1), // Lower index (should be sorted first)
+          formControlName: vi.fn().mockReturnValue('block2'),
+          sortIndex: vi.fn().mockReturnValue(1), // Lower index (should be sorted first)
           constructor: { name: 'AMockBlockComponent' },
-          formGroup: jest.fn().mockReturnValue({
-            get: jest.fn().mockReturnValue({ value: 'data2' }),
+          formGroup: vi.fn().mockReturnValue({
+            get: vi.fn().mockReturnValue({ value: 'data2' }),
           }),
         },
       } as unknown as ComponentRef<BlockComponent>;
@@ -161,13 +161,13 @@ describe('EditorJsService', () => {
       } as ComponentRef<BlockComponent>;
 
       // Mock dependencies
-      jest
+      vi
         .spyOn(service, 'createFormGroupControl')
         .mockReturnValue(of(mockFormControl));
-      jest
+      vi
         .spyOn(service, 'attachComponent')
         .mockReturnValue(of(mockComponentRef));
-      jest
+      vi
         .spyOn(blockMovementServiceMock, 'updateComponentIndices')
         .mockReturnValue(of(void 0));
 
@@ -202,13 +202,13 @@ describe('EditorJsService', () => {
       const mockViewRef = mockComponentRef.hostView;
 
       // Mock ngxEditor.get to return the mockViewRef
-      jest.spyOn(ngxEditorMock, 'get').mockReturnValue(mockViewRef);
+      vi.spyOn(ngxEditorMock, 'get').mockReturnValue(mockViewRef);
 
       // Spy on ngxEditor.move
-      jest.spyOn(ngxEditorMock, 'move').mockImplementation();
+      vi.spyOn(ngxEditorMock, 'move').mockImplementation();
 
       // Mock updateComponentIndices to return an observable
-      jest
+      vi
         .spyOn(blockMovementServiceMock, 'updateComponentIndices')
         .mockReturnValue(of(void 0));
 
@@ -255,15 +255,15 @@ describe('EditorJsService', () => {
       // Arrange - Mock component references with different sortIndex values
       const mockComponentRef1 = {
         instance: {
-          sortIndex: jest.fn().mockReturnValue(2), // Higher index
-          formControlName: jest.fn().mockReturnValue('block2'),
+          sortIndex: vi.fn().mockReturnValue(2), // Higher index
+          formControlName: vi.fn().mockReturnValue('block2'),
         },
       } as unknown as ComponentRef<BlockComponent>;
 
       const mockComponentRef2 = {
         instance: {
-          sortIndex: jest.fn().mockReturnValue(1), // Lower index
-          formControlName: jest.fn().mockReturnValue('block1'),
+          sortIndex: vi.fn().mockReturnValue(1), // Lower index
+          formControlName: vi.fn().mockReturnValue('block1'),
         },
       } as unknown as ComponentRef<BlockComponent>;
 
@@ -273,12 +273,12 @@ describe('EditorJsService', () => {
       );
 
       // Spy on removeBlockComponent to track call order and return correct type
-      const removeBlockSpy = jest
+      const removeBlockSpy = vi
         .spyOn(service, 'removeBlockComponent')
         .mockReturnValue(of([true, void 0] as [boolean, void])); // ✅ Correct tuple type
 
       // Spy on updateComponentIndices
-      jest
+      vi
         .spyOn(blockMovementServiceMock, 'updateComponentIndices')
         .mockReturnValue(of(void 0));
 
@@ -311,21 +311,21 @@ describe('EditorJsService', () => {
     it('should create and attach a component with correct inputs', (done) => {
       // Arrange - Mock ComponentRef
       const mockComponentInstance = {
-        actionCallback: jest.fn(),
+        actionCallback: vi.fn(),
       };
 
       const mockComponentRef = {
         instance: mockComponentInstance,
-        setInput: jest.fn(), // Spy on setInput
+        setInput: vi.fn(), // Spy on setInput
       } as unknown as ComponentRef<BlockComponent>;
 
       // Mock ngxEditor.createComponent to return mockComponentRef
-      jest
+      vi
         .spyOn(ngxEditorMock, 'createComponent')
         .mockReturnValue(mockComponentRef);
 
       // Spy on blockMovementService.newComponentAttached
-      jest.spyOn(blockMovementServiceMock, 'newComponentAttached');
+      vi.spyOn(blockMovementServiceMock, 'newComponentAttached');
 
       // Create test input
       const block: NgxEditorJsBlockWithComponent = {
@@ -384,12 +384,12 @@ describe('EditorJsService', () => {
     beforeEach(() => {
       // Manually mock FormBuilder
       formBuilderMock = {
-        control: jest.fn((value) => new FormControl(value)), // Return real FormControl
+        control: vi.fn((value) => new FormControl(value)), // Return real FormControl
       };
 
       // Manually mock FormGroup
       formGroupMock = {
-        addControl: jest.fn(), // Spy on addControl
+        addControl: vi.fn(), // Spy on addControl
       } as Partial<FormGroup>;
 
       // Assign mocks to the service

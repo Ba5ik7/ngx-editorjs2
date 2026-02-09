@@ -12,13 +12,13 @@ import { NgxEditorJsBlockWithComponent } from 'ngx-editor-js2';
 
 describe('NgxEditorJs2Service', () => {
   let service: NgxEditorJs2Service;
-  let editorJsServiceMock: jest.Mocked<EditorJsService>;
+  let editorJsServiceMock: MockedObject<EditorJsService>;
 
   beforeEach(() => {
     editorJsServiceMock = {
-      clearBlocks: jest.fn().mockReturnValue(of(null)),
-      addBlockComponent: jest.fn().mockImplementation((block) => of(block)),
-    } as unknown as jest.Mocked<EditorJsService>;
+      clearBlocks: vi.fn().mockReturnValue(of(null)),
+      addBlockComponent: vi.fn().mockImplementation((block) => of(block)),
+    } as unknown as MockedObject<EditorJsService>;
 
     TestBed.configureTestingModule({
       providers: [
@@ -321,13 +321,13 @@ describe('NgxEditorJs2Service', () => {
 
 describe('NgxEditorJs2Service with consumer supported blocks', () => {
   let service: NgxEditorJs2Service;
-  let editorJsServiceMock: jest.Mocked<EditorJsService>;
+  let editorJsServiceMock: MockedObject<EditorJsService>;
 
   beforeEach(() => {
     editorJsServiceMock = {
-      clearBlocks: jest.fn().mockReturnValue(of(null)),
-      addBlockComponent: jest.fn().mockImplementation((block) => of(block)),
-    } as unknown as jest.Mocked<EditorJsService>;
+      clearBlocks: vi.fn().mockReturnValue(of(null)),
+      addBlockComponent: vi.fn().mockImplementation((block) => of(block)),
+    } as unknown as MockedObject<EditorJsService>;
 
     TestBed.configureTestingModule({
       providers: [

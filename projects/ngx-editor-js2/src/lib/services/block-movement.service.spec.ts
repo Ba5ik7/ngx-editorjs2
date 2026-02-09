@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 
 describe('BlockMovementService', () => {
   let service: BlockMovementService;
-  let ngxEditorMock: jest.Mocked<ViewContainerRef>;
+  let ngxEditorMock: MockedObject<ViewContainerRef>;
   let mockComponentRef: ComponentRef<BlockComponent>;
 
   beforeEach(() => {
@@ -14,16 +14,16 @@ describe('BlockMovementService', () => {
     // Mock ngxEditor
     ngxEditorMock = {
       length: 3,
-      indexOf: jest.fn((view) => (view as any).mockIndex),
-      move: jest.fn(),
-      remove: jest.fn(),
-    } as unknown as jest.Mocked<ViewContainerRef>;
+      indexOf: vi.fn((view) => (view as any).mockIndex),
+      move: vi.fn(),
+      remove: vi.fn(),
+    } as unknown as MockedObject<ViewContainerRef>;
 
     // Mock ComponentRef
     mockComponentRef = {
       instance: {},
       hostView: { mockIndex: 1 },
-      setInput: jest.fn(),
+      setInput: vi.fn(),
     } as unknown as ComponentRef<BlockComponent>;
   });
 
@@ -63,7 +63,7 @@ describe('BlockMovementService', () => {
   // ✅ 5. moveBlockComponentPosition()
   it('should move a block up when MovePositionActions.UP is used', (done) => {
     service.componentRefMap.set(mockComponentRef.instance, mockComponentRef);
-    jest.spyOn(ngxEditorMock, 'length', 'get').mockReturnValue(3);
+    vi.spyOn(ngxEditorMock, 'length', 'get').mockReturnValue(3);
 
     service.moveBlockComponentPosition(ngxEditorMock, MovePositionActions.UP, 2).subscribe(() => {
       expect(ngxEditorMock.move).toHaveBeenCalledWith(mockComponentRef.hostView, 0);
@@ -75,7 +75,7 @@ describe('BlockMovementService', () => {
 
   it('should move a block down when MovePositionActions.DOWN is used', (done) => {
     service.componentRefMap.set(mockComponentRef.instance, mockComponentRef);
-    jest.spyOn(ngxEditorMock, 'length', 'get').mockReturnValue(3);
+    vi.spyOn(ngxEditorMock, 'length', 'get').mockReturnValue(3);
 
     service.moveBlockComponentPosition(ngxEditorMock, MovePositionActions.DOWN, 1).subscribe(() => {
       expect(ngxEditorMock.move).toHaveBeenCalledWith(mockComponentRef.hostView, 2);
