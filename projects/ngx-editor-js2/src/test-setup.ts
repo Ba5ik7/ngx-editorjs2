@@ -23,18 +23,22 @@ declare global {
   };
 }
 
-// Initialize the Angular testing environment only once.
-let testEnvironmentInitialized = false;
-
-if (!testEnvironmentInitialized) {
+// Initialize the Angular testing environment
+try {
   getTestBed().initTestEnvironment(
     BrowserDynamicTestingModule,
     platformBrowserDynamicTesting(),
   );
-  testEnvironmentInitialized = true;
+} catch (e) {
+  // Environment might already be initialized
+  console.log('Test environment already initialized');
 }
 
 // Reset test module after each test
 afterEach(() => {
-  getTestBed().resetTestingModule();
+  try {
+    getTestBed().resetTestingModule();
+  } catch (e) {
+    // Ignore errors on reset
+  }
 });

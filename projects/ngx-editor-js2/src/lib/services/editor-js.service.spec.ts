@@ -1,3 +1,4 @@
+import '../test-setup';
 import { MockComponent } from 'ng-mocks';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditorJsService } from './editor-js.service';
