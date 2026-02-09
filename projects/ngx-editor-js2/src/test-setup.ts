@@ -6,12 +6,6 @@ import {
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 
-// Initialize the Angular testing environment.
-getTestBed().initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting(),
-);
-
 // Type alias for mocked objects - compatible with Vitest
 type MockedObject<T> = {
   [K in keyof T]: T[K] extends (...args: any[]) => any
@@ -26,4 +20,15 @@ declare global {
       ? ReturnType<typeof vi.fn> & T[K]
       : T[K];
   };
+}
+
+// Initialize the Angular testing environment only once.
+let testEnvironmentInitialized = false;
+
+if (!testEnvironmentInitialized) {
+  getTestBed().initTestEnvironment(
+    BrowserDynamicTestingModule,
+    platformBrowserDynamicTesting(),
+  );
+  testEnvironmentInitialized = true;
 }

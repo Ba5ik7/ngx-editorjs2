@@ -63,16 +63,14 @@ describe('EditorJsService', () => {
   });
 
   describe('getBlocks$', () => {
-    it('should return an empty array when no blocks exist', (done) => {
+    it('should return an empty array when no blocks exist', async () => {
       blockMovementServiceMock.getNgxEditorJsBlocks.mockReturnValue(of([]));
 
-      service.getBlocks$().subscribe((blocks) => {
-        expect(blocks).toEqual([]);
-        done();
-      });
+      const blocks = await firstValueFrom(service.getBlocks$());
+      expect(blocks).toEqual([]);
     });
 
-    it('should return sorted blocks with correct data', (done) => {
+    it('should return sorted blocks with correct data', async () => {
       // Arrange: Mock component references in unsorted order
       const mockComponentRef1 = {
         instance: {
@@ -102,24 +100,22 @@ describe('EditorJsService', () => {
       );
 
       // Act
-      service.getBlocks$().subscribe((blocks) => {
-        // Assert: Blocks should be sorted by `sortIndex`
-        expect(blocks).toEqual([
-          {
-            blockId: 'block2', // This should be first (sortIndex = 1)
-            sortIndex: 1,
-            componentInstanceName: 'MockBlockComponent',
-            dataClean: 'data2',
-          },
-          {
-            blockId: 'block1', // This should be second (sortIndex = 2)
-            sortIndex: 2,
-            componentInstanceName: 'MockBlockComponent',
-            dataClean: 'data1',
-          },
-        ]);
-        done();
-      });
+      const blocks = await firstValueFrom(service.getBlocks$());
+      // Assert: Blocks should be sorted by `sortIndex`
+      expect(blocks).toEqual([
+        {
+          blockId: 'block2', // This should be first (sortIndex = 1)
+          sortIndex: 1,
+          componentInstanceName: 'MockBlockComponent',
+          dataClean: 'data2',
+        },
+        {
+          blockId: 'block1', // This should be second (sortIndex = 2)
+          sortIndex: 2,
+          componentInstanceName: 'MockBlockComponent',
+          dataClean: 'data1',
+        },
+      ]);
     });
   });
 
@@ -141,7 +137,7 @@ describe('EditorJsService', () => {
   });
 
   describe('addBlockComponent', () => {
-    it('should call createFormGroupControl, attachComponent, and updateComponentIndices with correct args', (done) => {
+    it('should call createFormGroupControl, attachComponent, and updateComponentIndices with correct args', async () => {
       // Arrange - Mock block
       const block: NgxEditorJsBlockWithComponent = {
         blockId: 'testBlock',
@@ -172,32 +168,27 @@ describe('EditorJsService', () => {
         .mockReturnValue(of(void 0));
 
       // Act - Call the function
-      service.addBlockComponent(block).subscribe(() => {
-        // Assert - Verify that each method was called with the expected arguments
-        expect(service.createFormGroupControl).toHaveBeenCalledWith(block);
-        expect(service.attachComponent).toHaveBeenCalledWith(block);
-        expect(
-          blockMovementServiceMock.updateComponentIndices
-        ).toHaveBeenCalledWith(service.ngxEditor);
-
-        done();
-      });
+      await firstValueFrom(service.addBlockComponent(block));
+      // Assert - Verify that each method was called with the expected arguments
+      expect(service.createFormGroupControl).toHaveBeenCalledWith(block);
+      expect(service.attachComponent).toHaveBeenCalledWith(block);
+      expect(
+        blockMovementServiceMock.updateComponentIndices
+      ).toHaveBeenCalledWith(service.ngxEditor);
     });
   });
 
   describe('removeBlockComponent', () => {
-    it('should call removeBlockComponent on blockMovementService', (done) => {
-      service.removeBlockComponent(0, 'testBlock').subscribe(() => {
-        expect(
-          blockMovementServiceMock.removeBlockComponent
-        ).toHaveBeenCalledWith(ngxEditorMock, 0, false);
-        done();
-      });
+    it('should call removeBlockComponent on blockMovementService', async () => {
+      await firstValueFrom(service.removeBlockComponent(0, 'testBlock'));
+      expect(
+        blockMovementServiceMock.removeBlockComponent
+      ).toHaveBeenCalledWith(ngxEditorMock, 0, false);
     });
   });
 
   describe('moveBlockComponentPosition', () => {
-    it('should move a block to a new position', (done) => {
+    it('should move a block to a new position', async () => {
       // Arrange: Mock ViewRef (or whatever `get()` should return)
       const mockViewRef = mockComponentRef.hostView;
 
@@ -213,45 +204,38 @@ describe('EditorJsService', () => {
         .mockReturnValue(of(void 0));
 
       // Act
-      service.moveBlockComponentPosition(1, 2).subscribe(() => {
-        // Assert
-        expect(ngxEditorMock.get).toHaveBeenCalledWith(1); // Ensure get() is called with the correct index
-        expect(ngxEditorMock.move).toHaveBeenCalledWith(mockViewRef, 2); // Ensure move() is called correctly
-        expect(
-          blockMovementServiceMock.updateComponentIndices
-        ).toHaveBeenCalledWith(service.ngxEditor); // Ensure indices update
-
-        done();
-      });
+      await firstValueFrom(service.moveBlockComponentPosition(1, 2));
+      // Assert
+      expect(ngxEditorMock.get).toHaveBeenCalledWith(1); // Ensure get() is called with the correct index
+      expect(ngxEditorMock.move).toHaveBeenCalledWith(mockViewRef, 2); // Ensure move() is called correctly
+      expect(
+        blockMovementServiceMock.updateComponentIndices
+      ).toHaveBeenCalledWith(service.ngxEditor); // Ensure indices update
     });
   });
 
   describe('determineMovePositionAction', () => {
-    it('should delete a block when action is DELETE', (done) => {
-      service
-        .determineMovePositionAction(MovePositionActions.DELETE, 0, 'testBlock')
-        .subscribe(() => {
-          expect(
-            blockMovementServiceMock.removeBlockComponent
-          ).toHaveBeenCalled();
-          done();
-        });
+    it('should delete a block when action is DELETE', async () => {
+      await firstValueFrom(
+        service.determineMovePositionAction(MovePositionActions.DELETE, 0, 'testBlock')
+      );
+      expect(
+        blockMovementServiceMock.removeBlockComponent
+      ).toHaveBeenCalled();
     });
 
-    it('should move a block when action is MOVE_UP or MOVE_DOWN', (done) => {
-      service
-        .determineMovePositionAction(MovePositionActions.UP, 1, 'testBlock')
-        .subscribe(() => {
-          expect(
-            blockMovementServiceMock.moveBlockComponentPosition
-          ).toHaveBeenCalled();
-          done();
-        });
+    it('should move a block when action is MOVE_UP or MOVE_DOWN', async () => {
+      await firstValueFrom(
+        service.determineMovePositionAction(MovePositionActions.UP, 1, 'testBlock')
+      );
+      expect(
+        blockMovementServiceMock.moveBlockComponentPosition
+      ).toHaveBeenCalled();
     });
   });
 
   describe('clearBlocks', () => {
-    it('should clear all blocks, sort them correctly, and reset indices', (done) => {
+    it('should clear all blocks, sort them correctly, and reset indices', async () => {
       // Arrange - Mock component references with different sortIndex values
       const mockComponentRef1 = {
         instance: {
@@ -283,32 +267,29 @@ describe('EditorJsService', () => {
         .mockReturnValue(of(void 0));
 
       // Act
-      service.clearBlocks().subscribe(() => {
-        // Assert - Ensure sorting is correct and removeBlockComponent is called in order
-        expect(removeBlockSpy).toHaveBeenNthCalledWith(
-          1,
-          1 + 1, // Lower index (1) first, so we expect removeBlockComponent(2, "block1", true)
-          'block1',
-          true
-        );
-        expect(removeBlockSpy).toHaveBeenNthCalledWith(
-          2,
-          2 + 1, // Higher index (2) second, so we expect removeBlockComponent(3, "block2", true)
-          'block2',
-          true
-        );
+      await firstValueFrom(service.clearBlocks());
+      // Assert - Ensure sorting is correct and removeBlockComponent is called in order
+      expect(removeBlockSpy).toHaveBeenNthCalledWith(
+        1,
+        1 + 1, // Lower index (1) first, so we expect removeBlockComponent(2, "block1", true)
+        'block1',
+        true
+      );
+      expect(removeBlockSpy).toHaveBeenNthCalledWith(
+        2,
+        2 + 1, // Higher index (2) second, so we expect removeBlockComponent(3, "block2", true)
+        'block2',
+        true
+      );
 
-        // Ensure final cleanup methods are called
-        expect(blockMovementServiceMock.clearComponentRefs).toHaveBeenCalled();
-        expect(ngxEditorMock.clear).toHaveBeenCalled();
-
-        done();
-      });
+      // Ensure final cleanup methods are called
+      expect(blockMovementServiceMock.clearComponentRefs).toHaveBeenCalled();
+      expect(ngxEditorMock.clear).toHaveBeenCalled();
     });
   });
 
   describe('attachComponent', () => {
-    it('should create and attach a component with correct inputs', (done) => {
+    it('should create and attach a component with correct inputs', async () => {
       // Arrange - Mock ComponentRef
       const mockComponentInstance = {
         actionCallback: vi.fn(),
@@ -339,41 +320,38 @@ describe('EditorJsService', () => {
       };
 
       // Act
-      service.attachComponent(block).subscribe((result) => {
-        // Assert
-        expect(ngxEditorMock.createComponent).toHaveBeenCalledWith(
-          HeaderBlockComponent,
-          { index: 1 }
-        );
-        expect(mockComponentRef.setInput).toHaveBeenCalledWith('sortIndex', 1);
-        expect(mockComponentRef.setInput).toHaveBeenCalledWith(
-          'formGroup',
-          service.formGroup
-        );
-        expect(mockComponentRef.setInput).toHaveBeenCalledWith(
-          'formControlName',
-          'testBlock'
-        );
-        expect(mockComponentRef.setInput).toHaveBeenCalledWith(
-          'autofocus',
-          true
-        );
+      const result = await firstValueFrom(service.attachComponent(block));
+      // Assert
+      expect(ngxEditorMock.createComponent).toHaveBeenCalledWith(
+        HeaderBlockComponent,
+        { index: 1 }
+      );
+      expect(mockComponentRef.setInput).toHaveBeenCalledWith('sortIndex', 1);
+      expect(mockComponentRef.setInput).toHaveBeenCalledWith(
+        'formGroup',
+        service.formGroup
+      );
+      expect(mockComponentRef.setInput).toHaveBeenCalledWith(
+        'formControlName',
+        'testBlock'
+      );
+      expect(mockComponentRef.setInput).toHaveBeenCalledWith(
+        'autofocus',
+        true
+      );
 
-        // Verify action callback is called if savedAction is set
-        expect(mockComponentInstance.actionCallback).toHaveBeenCalledWith(
-          'mockAction'
-        );
+      // Verify action callback is called if savedAction is set
+      expect(mockComponentInstance.actionCallback).toHaveBeenCalledWith(
+        'mockAction'
+      );
 
-        // Verify newComponentAttached is called with the componentRef
-        expect(
-          blockMovementServiceMock.newComponentAttached
-        ).toHaveBeenCalledWith(mockComponentRef);
+      // Verify newComponentAttached is called with the componentRef
+      expect(
+        blockMovementServiceMock.newComponentAttached
+      ).toHaveBeenCalledWith(mockComponentRef);
 
-        // Ensure correct value is returned
-        expect(result).toBe(mockComponentRef);
-
-        done();
-      });
+      // Ensure correct value is returned
+      expect(result).toBe(mockComponentRef);
     });
   });
 
@@ -397,7 +375,7 @@ describe('EditorJsService', () => {
       service.formGroup = formGroupMock as FormGroup;
     });
 
-    it('should create a new form control and add it to the form group', (done) => {
+    it('should create a new form control and add it to the form group', async () => {
       // Arrange: Test block data
       const block: NgxEditorJsBlockWithComponent = {
         blockId: 'testBlock',
@@ -409,18 +387,15 @@ describe('EditorJsService', () => {
       };
 
       // Act
-      service.createFormGroupControl(block).subscribe((formControl) => {
-        // Assert: Ensure form control is created with correct data
-        expect(formControl.value).toBe('mockData');
+      const formControl = await firstValueFrom(service.createFormGroupControl(block));
+      // Assert: Ensure form control is created with correct data
+      expect(formControl.value).toBe('mockData');
 
-        // Ensure formGroup.addControl is called with correct arguments
-        expect(formGroupMock.addControl).toHaveBeenCalledWith(
-          'testBlock',
-          formControl
-        );
-
-        done();
-      });
+      // Ensure formGroup.addControl is called with correct arguments
+      expect(formGroupMock.addControl).toHaveBeenCalledWith(
+        'testBlock',
+        formControl
+      );
     });
   });
 });

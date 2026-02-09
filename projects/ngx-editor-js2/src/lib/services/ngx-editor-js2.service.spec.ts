@@ -7,7 +7,7 @@ import { EditorJsService } from './editor-js.service';
 import { SupportedBlock, NgxEditorJsBlock } from '../ngx-editor-js2.interface';
 import { ParagraphBlockComponent } from '../components/blocks/paragraph-block.component';
 import { HeaderBlockComponent } from '../components/blocks/header-block.component';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { NgxEditorJsBlockWithComponent } from 'ngx-editor-js2';
 
 describe('NgxEditorJs2Service', () => {
@@ -34,29 +34,25 @@ describe('NgxEditorJs2Service', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should initialize with default internal supported blocks and empty consumer supported blocks', (done) => {
-    service.consumerSupportedBlocks.subscribe((blocks) => {
-      expect(blocks).toEqual([]);
-      done();
-    });
+  it('should initialize with default internal supported blocks and empty consumer supported blocks', async () => {
+    const blocks = await firstValueFrom(service.consumerSupportedBlocks);
+    expect(blocks).toEqual([]);
   });
 
-  it('should initialize with default internal supported blocks', (done) => {
-    service.supportedBlocks$.subscribe((blocks) => {
-      expect(blocks).toEqual([
-        {
-          name: 'Paragraph',
-          component: ParagraphBlockComponent,
-          componentInstanceName: 'ParagraphBlockComponent',
-        },
-        {
-          name: 'Header',
-          component: HeaderBlockComponent,
-          componentInstanceName: 'HeaderBlockComponent',
-        },
-      ]);
-      done();
-    });
+  it('should initialize with default internal supported blocks', async () => {
+    const blocks = await firstValueFrom(service.supportedBlocks$);
+    expect(blocks).toEqual([
+      {
+        name: 'Paragraph',
+        component: ParagraphBlockComponent,
+        componentInstanceName: 'ParagraphBlockComponent',
+      },
+      {
+        name: 'Header',
+        component: HeaderBlockComponent,
+        componentInstanceName: 'HeaderBlockComponent',
+      },
+    ]);
   });
 
   it('should load default blocks when no blocks are provided', () => {
@@ -227,7 +223,7 @@ describe('NgxEditorJs2Service', () => {
     expect(marshalledBlocks[1].component).toBe(HeaderBlockComponent); // Fallback to default
   });
 
-  it('should call addBlockComponent for each block', (done) => {
+  it('should call addBlockComponent for each block', async () => {
     const blocks = [
       {
         blockId: '1',
@@ -238,13 +234,11 @@ describe('NgxEditorJs2Service', () => {
       },
     ];
 
-    service.addBlocksToEditorJs(blocks).subscribe(() => {
-      expect(editorJsServiceMock.addBlockComponent).toHaveBeenCalledTimes(1);
-      done();
-    });
+    await firstValueFrom(service.addBlocksToEditorJs(blocks));
+    expect(editorJsServiceMock.addBlockComponent).toHaveBeenCalledTimes(1);
   });
 
-  it('should clear blocks from EditorJs before loading', (done) => {
+  it('should clear blocks from EditorJs before loading', async () => {
     const blocks = [
       {
         blockId: '1',
@@ -254,14 +248,12 @@ describe('NgxEditorJs2Service', () => {
       },
     ];
 
-    service.clearBlocksFromEditorJs(blocks).subscribe(([clearedBlocks]) => {
-      expect(clearedBlocks).toEqual(blocks);
-      expect(editorJsServiceMock.clearBlocks).toHaveBeenCalledTimes(1);
-      done();
-    });
+    const [clearedBlocks] = await firstValueFrom(service.clearBlocksFromEditorJs(blocks));
+    expect(clearedBlocks).toEqual(blocks);
+    expect(editorJsServiceMock.clearBlocks).toHaveBeenCalledTimes(1);
   });
 
-  it('should combine supported blocks with provided blocks', (done) => {
+  it('should combine supported blocks with provided blocks', async () => {
     const blocks = [
       {
         blockId: '1',
@@ -271,26 +263,24 @@ describe('NgxEditorJs2Service', () => {
       },
     ];
 
-    service.combineSupportBlocks(blocks).subscribe(([resultBlocks, supportedBlocks]) => {
-      expect(resultBlocks).toEqual(blocks);
-      expect(supportedBlocks).toEqual([
-        {
-          name: 'Paragraph',
-          component: ParagraphBlockComponent,
-          componentInstanceName: 'ParagraphBlockComponent',
-        },
-        {
-          name: 'Header',
-          component: HeaderBlockComponent,
-          componentInstanceName: 'HeaderBlockComponent',
-        },
-      ]);
-      done();
-    });
+    const [resultBlocks, supportedBlocks] = await firstValueFrom(service.combineSupportBlocks(blocks));
+    expect(resultBlocks).toEqual(blocks);
+    expect(supportedBlocks).toEqual([
+      {
+        name: 'Paragraph',
+        component: ParagraphBlockComponent,
+        componentInstanceName: 'ParagraphBlockComponent',
+      },
+      {
+        name: 'Header',
+        component: HeaderBlockComponent,
+        componentInstanceName: 'HeaderBlockComponent',
+      },
+    ]);
   });
 
   describe('loadBlocks$', () => {
-    it('should load blocks correctly', (done) => {
+    it('should load blocks correctly', async () => {
       const blocks: NgxEditorJsBlock[] = [
         {
           blockId: '1',
@@ -311,10 +301,8 @@ describe('NgxEditorJs2Service', () => {
       ];
 
       service.blocksToLoad.next(blocks);
-      service.loadBlocks$.subscribe((loadedBlocks) => {
-        expect(loadedBlocks).toEqual(blocksWithComponent);
-        done();
-      });
+      const loadedBlocks = await firstValueFrom(service.loadBlocks$);
+      expect(loadedBlocks).toEqual(blocksWithComponent);
     });
   });
 });
@@ -351,26 +339,24 @@ describe('NgxEditorJs2Service with consumer supported blocks', () => {
     service = TestBed.inject(NgxEditorJs2Service);
   });
 
-  it('should initialize with default internal supported blocks and consumer supported blocks', (done) => {
-    service.supportedBlocks$.subscribe((blocks) => {
-      expect(blocks).toEqual([
-        {
-          name: 'Paragraph',
-          component: ParagraphBlockComponent,
-          componentInstanceName: 'ParagraphBlockComponent',
-        },
-        {
-          name: 'Header',
-          component: HeaderBlockComponent,
-          componentInstanceName: 'HeaderBlockComponent',
-        },
-        {
-          name: 'CustomBlock',
-          component: HeaderBlockComponent,
-          componentInstanceName: 'CustomBlockComponent',
-        },
-      ]);
-      done();
-    });
+  it('should initialize with default internal supported blocks and consumer supported blocks', async () => {
+    const blocks = await firstValueFrom(service.supportedBlocks$);
+    expect(blocks).toEqual([
+      {
+        name: 'Paragraph',
+        component: ParagraphBlockComponent,
+        componentInstanceName: 'ParagraphBlockComponent',
+      },
+      {
+        name: 'Header',
+        component: HeaderBlockComponent,
+        componentInstanceName: 'HeaderBlockComponent',
+      },
+      {
+        name: 'CustomBlock',
+        component: HeaderBlockComponent,
+        componentInstanceName: 'CustomBlockComponent',
+      },
+    ]);
   });
 });
