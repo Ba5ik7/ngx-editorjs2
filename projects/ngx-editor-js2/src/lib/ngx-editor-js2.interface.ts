@@ -37,6 +37,7 @@ export interface BlockOptionAction {
   action: string;
   icon?: string;
   text?: string;
+  devIcon?: string;
 }
 
 export enum MovePositionActions {

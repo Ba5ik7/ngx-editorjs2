@@ -26,10 +26,12 @@ import {
         (click)="handleAction(blockOptionAction.action)"
         matRipple
       >
-        @if (blockOptionAction.text) {
-        {{ blockOptionAction.text }}
+        @if (blockOptionAction.icon) {
+          <mat-icon>{{ blockOptionAction.icon }}</mat-icon>
+        } @else if (blockOptionAction.devIcon) {
+          <i [class]="blockOptionAction.devIcon"></i>
         } @else {
-        <mat-icon>{{ blockOptionAction.icon }}</mat-icon>
+          {{ blockOptionAction.text }}
         }
       </div>
       }
