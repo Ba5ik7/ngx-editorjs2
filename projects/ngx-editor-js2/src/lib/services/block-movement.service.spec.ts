@@ -1,11 +1,11 @@
 import { ComponentRef, ViewContainerRef } from '@angular/core';
 import { BlockMovementService } from './block-movement.service';
 import { BlockComponent, MovePositionActions } from '../ngx-editor-js2.interface';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 
 describe('BlockMovementService', () => {
   let service: BlockMovementService;
-  let ngxEditorMock: jest.Mocked<ViewContainerRef>;
+  let ngxEditorMock: MockedObject<ViewContainerRef>;
   let mockComponentRef: ComponentRef<BlockComponent>;
 
   beforeEach(() => {
@@ -14,16 +14,16 @@ describe('BlockMovementService', () => {
     // Mock ngxEditor
     ngxEditorMock = {
       length: 3,
-      indexOf: jest.fn((view) => (view as any).mockIndex),
-      move: jest.fn(),
-      remove: jest.fn(),
-    } as unknown as jest.Mocked<ViewContainerRef>;
+      indexOf: vi.fn((view) => (view as any).mockIndex),
+      move: vi.fn(),
+      remove: vi.fn(),
+    } as unknown as MockedObject<ViewContainerRef>;
 
     // Mock ComponentRef
     mockComponentRef = {
       instance: {},
       hostView: { mockIndex: 1 },
-      setInput: jest.fn(),
+      setInput: vi.fn(),
     } as unknown as ComponentRef<BlockComponent>;
   });
 
@@ -35,13 +35,11 @@ describe('BlockMovementService', () => {
   });
 
   // ✅ 2. getNgxEditorJsBlocks()
-  it('should return all component refs', (done) => {
+  it('should return all component refs', async () => {
     service.componentRefMap.set(mockComponentRef.instance, mockComponentRef);
 
-    service.getNgxEditorJsBlocks().subscribe((blocks) => {
-      expect(blocks).toEqual([mockComponentRef]);
-      done();
-    });
+    const blocks = await firstValueFrom(service.getNgxEditorJsBlocks());
+    expect(blocks).toEqual([mockComponentRef]);
   });
 
   // ✅ 3. newComponentAttached()
@@ -51,58 +49,48 @@ describe('BlockMovementService', () => {
   });
 
   // ✅ 4. updateComponentIndices()
-  it('should update component sort indices', (done) => {
+  it('should update component sort indices', async () => {
     service.componentRefMap.set(mockComponentRef.instance, mockComponentRef);
 
-    service.updateComponentIndices(ngxEditorMock).subscribe(() => {
-      expect(mockComponentRef.setInput).toHaveBeenCalledWith('sortIndex', 1);
-      done();
-    });
+    await firstValueFrom(service.updateComponentIndices(ngxEditorMock));
+    expect(mockComponentRef.setInput).toHaveBeenCalledWith('sortIndex', 1);
   });
 
   // ✅ 5. moveBlockComponentPosition()
-  it('should move a block up when MovePositionActions.UP is used', (done) => {
+  it('should move a block up when MovePositionActions.UP is used', async () => {
     service.componentRefMap.set(mockComponentRef.instance, mockComponentRef);
-    jest.spyOn(ngxEditorMock, 'length', 'get').mockReturnValue(3);
+    vi.spyOn(ngxEditorMock, 'length', 'get').mockReturnValue(3);
 
-    service.moveBlockComponentPosition(ngxEditorMock, MovePositionActions.UP, 2).subscribe(() => {
-      expect(ngxEditorMock.move).toHaveBeenCalledWith(mockComponentRef.hostView, 0);
-      expect(mockComponentRef.setInput).toHaveBeenCalledWith('sortIndex', 0);
-      expect(mockComponentRef.setInput).toHaveBeenCalledWith('autofocus', true);
-      done();
-    });
+    await firstValueFrom(service.moveBlockComponentPosition(ngxEditorMock, MovePositionActions.UP, 2));
+    expect(ngxEditorMock.move).toHaveBeenCalledWith(mockComponentRef.hostView, 0);
+    expect(mockComponentRef.setInput).toHaveBeenCalledWith('sortIndex', 0);
+    expect(mockComponentRef.setInput).toHaveBeenCalledWith('autofocus', true);
   });
 
-  it('should move a block down when MovePositionActions.DOWN is used', (done) => {
+  it('should move a block down when MovePositionActions.DOWN is used', async () => {
     service.componentRefMap.set(mockComponentRef.instance, mockComponentRef);
-    jest.spyOn(ngxEditorMock, 'length', 'get').mockReturnValue(3);
+    vi.spyOn(ngxEditorMock, 'length', 'get').mockReturnValue(3);
 
-    service.moveBlockComponentPosition(ngxEditorMock, MovePositionActions.DOWN, 1).subscribe(() => {
-      expect(ngxEditorMock.move).toHaveBeenCalledWith(mockComponentRef.hostView, 2);
-      expect(mockComponentRef.setInput).toHaveBeenCalledWith('sortIndex', 2);
-      expect(mockComponentRef.setInput).toHaveBeenCalledWith('autofocus', true);
-      done();
-    });
+    await firstValueFrom(service.moveBlockComponentPosition(ngxEditorMock, MovePositionActions.DOWN, 1));
+    expect(ngxEditorMock.move).toHaveBeenCalledWith(mockComponentRef.hostView, 2);
+    expect(mockComponentRef.setInput).toHaveBeenCalledWith('sortIndex', 2);
+    expect(mockComponentRef.setInput).toHaveBeenCalledWith('autofocus', true);
   });
 
   // ✅ 6. removeBlockComponent()
-  it('should remove a block component from ngxEditor and componentRefMap', (done) => {
+  it('should remove a block component from ngxEditor and componentRefMap', async () => {
     service.componentRefMap.set(mockComponentRef.instance, mockComponentRef);
 
-    service.removeBlockComponent(ngxEditorMock, 2, false).subscribe(() => {
-      expect(service.componentRefMap.has(mockComponentRef.instance)).toBe(false);
-      expect(ngxEditorMock.remove).toHaveBeenCalledWith(1);
-      done();
-    });
+    await firstValueFrom(service.removeBlockComponent(ngxEditorMock, 2, false));
+    expect(service.componentRefMap.has(mockComponentRef.instance)).toBe(false);
+    expect(ngxEditorMock.remove).toHaveBeenCalledWith(1);
   });
 
-  it('should not remove the last component if clear is false', (done) => {
+  it('should not remove the last component if clear is false', async () => {
     service.componentRefMap.set(mockComponentRef.instance, mockComponentRef);
 
-    service.removeBlockComponent(ngxEditorMock, 2, false).subscribe((result) => {
-      expect(result).toBe(false);
-      expect(ngxEditorMock.remove).not.toHaveBeenCalled();
-      done();
-    });
+    const result = await firstValueFrom(service.removeBlockComponent(ngxEditorMock, 2, false));
+    expect(result).toBe(false);
+    expect(ngxEditorMock.remove).not.toHaveBeenCalled();
   });
 });

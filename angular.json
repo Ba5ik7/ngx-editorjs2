@@ -76,19 +76,6 @@
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "projects/ngx-editorjs2-demo/tsconfig.spec.json",
-            "inlineStyleLanguage": ["scss"],
-            "styles": [
-              "@angular/material/prebuilt-themes/azure-blue.css",
-              "projects/ngx-editorjs2-demo/src/styles.scss"
-            ],
-            "scripts": []
-          }
         }
       }
     },
@@ -112,13 +99,6 @@
             }
           },
           "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "tsConfig": "projects/ngx-editor-js2/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
-          }
         }
       }
     }

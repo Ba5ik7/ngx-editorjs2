@@ -8,8 +8,10 @@
     "ngx-editor-js2:watch": "ng build ngx-editor-js2 --watch --configuration development",
     "ngx-editor-js2:postbuild": "chokidar 'dist/ngx-editor-js2/**/*' -i 'dist/ngx-editor-js2/styles/**/*' -i 'dist/ngx-editor-js2/schematics/**/*' -c 'npm run postbuild'",
     "ngx-editor-js2:watch:postbuild": "npm-run-all --parallel ngx-editor-js2:watch ngx-editor-js2:postbuild",
-    "test": "ng test ngx-editor-js2 --coverage",
-    "test-jest": "jest",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "deployDemo": "npx angular-cli-ghpages --dir=dist/ngx-editorjs2-demo/browser",
     "postbuild": "node ./postbuild.js",
     "build-schematics": "tsc -p projects/ngx-editor-js2/tsconfig.schematics.json"
@@ -31,17 +33,17 @@
     "zone.js": "^0.15.0"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^2.2.3",
     "@angular/build": "^21.1.0",
     "@angular/cli": "^21.1.0",
     "@angular/compiler-cli": "^21.1.0",
-    "@types/jest": "^30.0.0",
+    "@vitest/ui": "^4.0.18",
     "chokidar-cli": "^3.0.0",
     "enquirer": "^2.4.1",
-    "jest": "^30.2.0",
-    "jest-preset-angular": "^16.0.0",
+    "happy-dom": "^20.5.3",
     "ng-packagr": "^21.1.0",
     "npm-run-all": "^4.1.5",
-    "ts-jest": "^29.4.6",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "vitest": "^4.0.18"
   }
 }
